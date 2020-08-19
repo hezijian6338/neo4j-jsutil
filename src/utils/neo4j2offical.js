@@ -162,8 +162,13 @@ class Neo4j2Offical {
     label = '',
     value = {},
     relationName = '',
-    relationValue = {}
+    relationValue = {},
+    onlyProperties = false
   ) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
     const session = this.driver.session()
 
     try {
@@ -177,10 +182,21 @@ class Neo4j2Offical {
         )
       )
 
-      const singleRecord = result.records[0]
-      const node = singleRecord.get(0)
+      const nodes = []
 
-      return node
+      for (const record of result.records) {
+        const node = record.get(0)
+        if (onlyProperties) {
+          nodes.push(node.properties)
+        } else {
+          nodes.push(node)
+        }
+      }
+
+      // const singleRecord = result.records[0]
+      // const node = singleRecord.get(0)
+
+      return nodes
     } finally {
       await session.close()
     }

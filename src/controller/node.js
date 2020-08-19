@@ -56,13 +56,14 @@ class Node {
   }
 
   async findRelate(ctx) {
-    const { label, value, relationName, relationValue } = ctx.request.body
+    const { label, value, relationName, relationValue, onlyProperties } = ctx.request.body
 
     const result = await n2o.findRelate(
       label,
       value,
       relationName,
-      relationValue
+      relationValue,
+      onlyProperties
     )
 
     ctx.body = result
