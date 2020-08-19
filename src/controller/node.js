@@ -27,6 +27,7 @@ class Node {
       relateNodeValue,
       relationName,
       relationValue,
+      onlyProperties
     } = ctx.request.body
 
     const result = await n2o.relate(
@@ -35,7 +36,8 @@ class Node {
       relateNodeLabel,
       relateNodeValue,
       relationName,
-      relationValue
+      relationValue,
+      onlyProperties
     )
 
     ctx.body = result
