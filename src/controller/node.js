@@ -1,0 +1,94 @@
+const { n2o } = require('../utils/neo4j2offical')
+
+class Node {
+  constructor() {
+    // console.log(n2o)
+
+    this.n2o = n2o
+  }
+
+  async create(ctx) {
+    const { label, value } = ctx.request.body
+
+    try {
+      const result = await n2o.create(label, value)
+
+      ctx.body = result
+    } catch (error) {
+      ctx.throw(500, error)
+    }
+  }
+
+  async relate(ctx) {
+    const {
+      nodeLabel,
+      nodeValue,
+      relateNodeLabel,
+      relateNodeValue,
+      relationName,
+      relationValue,
+    } = ctx.request.body
+
+    const result = await n2o.relate(
+      nodeLabel,
+      nodeValue,
+      relateNodeLabel,
+      relateNodeValue,
+      relationName,
+      relationValue
+    )
+
+    ctx.body = result
+  }
+
+  async find(ctx) {
+    const { label, value, onlyProperties } = ctx.request.body
+
+    try {
+      const result = await n2o.find(label, value, onlyProperties)
+
+      ctx.body = result
+    } catch (error) {
+      ctx.throw(500, error)
+    }
+  }
+
+  async findRelate(ctx) {
+    const { label, value, relationName, relationValue } = ctx.request.body
+
+    const result = await n2o.findRelate(
+      label,
+      value,
+      relationName,
+      relationValue
+    )
+
+    ctx.body = result
+  }
+
+  async update(ctx) {
+    const { label, value, update } = ctx.request.body
+
+    const result = await n2o.update(label, value, update)
+
+    ctx.body = result
+  }
+
+  async delete(ctx) {
+    const { label, value } = ctx.request.body
+
+    const result = await n2o.delete(label, value)
+
+    ctx.body = result
+  }
+
+  async deleteRelation(ctx) {
+    const { relationName, relationValue } = ctx.request.body
+
+    const result = await n2o.deleteRelation(relationName, relationName)
+
+    ctx.body = result
+  }
+}
+
+module.exports = Node
