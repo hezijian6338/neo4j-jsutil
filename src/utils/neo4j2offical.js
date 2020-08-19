@@ -176,9 +176,61 @@ class Neo4j2Offical {
         tx.run(
           `match (a:${label} ${Neo4j2Offical.parseJSON(
             value
-          )})-[r:${relationName} ${Neo4j2Offical.parseJSON(
+          )})-[${relationName} ${Neo4j2Offical.parseJSON(
             relationValue
           )}]->(b) return b`
+        )
+      )
+
+      const nodes = []
+
+      for (const record of result.records) {
+        const node = record.get(0)
+        if (onlyProperties) {
+          nodes.push(node.properties)
+        } else {
+          nodes.push(node)
+        }
+      }
+
+      // const singleRecord = result.records[0]
+      // const node = singleRecord.get(0)
+
+      return nodes
+    } finally {
+      await session.close()
+    }
+  }
+
+  /**
+   * 
+   * @param String label
+   * @param Object value
+   * @param String relationName
+   * @param Object relationValue
+   * @param Boolean onlyProperties 
+   */
+  async findRelated(
+    label = '',
+    value = {},
+    relationName = '',
+    relationValue = {},
+    onlyProperties = false
+  ) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    const session = this.driver.session()
+
+    try {
+      const result = await session.readTransaction((tx) =>
+        tx.run(
+          `match (a:${label} ${Neo4j2Offical.parseJSON(
+            value
+          )})<-[${relationName} ${Neo4j2Offical.parseJSON(
+            relationValue
+          )}]-(b) return b`
         )
       )
 
