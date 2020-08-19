@@ -39,6 +39,8 @@ class Neo4j2Offical {
         tx.run(`MATCH (a:${label} ${Neo4j2Offical.parseJSON(value)}) return a`)
       )
 
+      console.log(result.summary.query.text)
+
       let nodes = []
 
       for (const record of result.records) {
@@ -78,6 +80,8 @@ class Neo4j2Offical {
       const result = await session.writeTransaction((tx) =>
         tx.run(`CREATE (p:${label} ${Neo4j2Offical.parseJSON(value)}) return p`)
       )
+
+      console.log(result.summary.query.text)
 
       const singleRecord = result.records[0]
       const node = singleRecord.get(0)
@@ -128,6 +132,8 @@ class Neo4j2Offical {
           )}]->(b) return a,r,b`
         )
       )
+
+      console.log(result.summary.query.text)
 
       const singleRecord = result.records[0]
       const node = {}
@@ -182,6 +188,8 @@ class Neo4j2Offical {
         )
       )
 
+      console.log(result.summary.query.text)
+
       const nodes = []
 
       for (const record of result.records) {
@@ -233,6 +241,8 @@ class Neo4j2Offical {
           )}]-(b) return b`
         )
       )
+
+      console.log(result.summary.query.text)
 
       const nodes = []
 
@@ -298,21 +308,31 @@ class Neo4j2Offical {
    * @param Object value
    * @param Object updateValue
    */
-  async update(label, value, updateValue) {
+  async update(label, value, updateValue, onlyProperties = false) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
     const session = this.driver.session()
 
-    const result = await session.writeTransaction((tx) => {
+    const result = await session.writeTransaction((tx) => 
       tx.run(
         `merge (a:${label} ${Neo4j2Offical.parseJSON(
           value
-        )}) set a += ${Neo4j2Offical.parseJSON(updateValue)} return  a`
+        )}) set a += ${Neo4j2Offical.parseJSON(updateValue)} return a`
       )
-    })
+    )
 
     const singleRecord = result.records[0]
     const node = singleRecord.get(0)
 
-    return node
+    console.log(result.summary.query.text)
+
+    if (onlyProperties) {
+      return node.properties
+    } else {
+      return node
+    }
   }
 }
 
