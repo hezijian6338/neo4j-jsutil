@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function () {
   return async function (ctx, next) {
     try {
       console.log(ctx.method, ctx.header.host + ctx.url)
@@ -14,7 +14,7 @@ module.exports = function() {
       console.log(error)
       const data = {
         code: 500,
-        message: error
+        message: error,
       }
       ctx.body = data
     }

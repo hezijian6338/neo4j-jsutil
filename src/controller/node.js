@@ -27,7 +27,7 @@ class Node {
       relateNodeValue,
       relationName,
       relationValue,
-      onlyProperties
+      onlyProperties,
     } = ctx.request.body
 
     const result = await n2o.relate(
@@ -56,7 +56,13 @@ class Node {
   }
 
   async findRelate(ctx) {
-    const { label, value, relationName, relationValue, onlyProperties } = ctx.request.body
+    const {
+      label,
+      value,
+      relationName,
+      relationValue,
+      onlyProperties,
+    } = ctx.request.body
 
     const result = await n2o.findRelate(
       label,
@@ -70,7 +76,13 @@ class Node {
   }
 
   async findRelated(ctx) {
-    const { label, value, relationName, relationValue, onlyProperties } = ctx.request.body
+    const {
+      label,
+      value,
+      relationName,
+      relationValue,
+      onlyProperties,
+    } = ctx.request.body
 
     const result = await n2o.findRelated(
       label,

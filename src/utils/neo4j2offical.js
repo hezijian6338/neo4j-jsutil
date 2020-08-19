@@ -211,12 +211,12 @@ class Neo4j2Offical {
   }
 
   /**
-   * 
+   *
    * @param String label
    * @param Object value
    * @param String relationName
    * @param Object relationValue
-   * @param Boolean onlyProperties 
+   * @param Boolean onlyProperties
    */
   async findRelated(
     label = '',
@@ -315,7 +315,7 @@ class Neo4j2Offical {
 
     const session = this.driver.session()
 
-    const result = await session.writeTransaction((tx) => 
+    const result = await session.writeTransaction((tx) =>
       tx.run(
         `merge (a:${label} ${Neo4j2Offical.parseJSON(
           value

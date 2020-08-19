@@ -4,7 +4,8 @@ const Node = require('./controller/node')
 const node = new Node()
 
 const nodeR = new Router()
-nodeR.post('/nodes', node.find)
+nodeR
+  .post('/nodes', node.find)
   .post('/node', node.create)
   .put('/node', node.update)
   .delete('/node', node.delete)
@@ -14,5 +15,5 @@ nodeR.post('/nodes', node.find)
   .delete('/relation', node.deleteRelation)
 
 module.exports = {
-  nodeR
+  nodeR,
 }
