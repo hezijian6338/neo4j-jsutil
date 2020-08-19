@@ -10,6 +10,7 @@ nodeR.post('/nodes', node.find)
   .post('/relate', node.relate)
   .post('/relate/node', node.findRelate)
   .post('/related/node', node.findRelated)
+  .delete('/relation', node.deleteRelation)
 
 module.exports = {
   nodeR

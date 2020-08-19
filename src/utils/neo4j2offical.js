@@ -282,7 +282,7 @@ class Neo4j2Offical {
 
     const result = session.writeTransaction((tx) => {
       tx.run(
-        `match ()-[:r${label} ${Neo4j2Offical.parseJSON(value)}]->() delete r`
+        `match ()-[r:${label} ${Neo4j2Offical.parseJSON(value)}]-() delete r`
       )
     })
 
