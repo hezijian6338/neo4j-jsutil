@@ -77,7 +77,11 @@ class Node {
   async delete(ctx) {
     const { label, value } = ctx.request.body
 
-    const result = await n2o.delete(label, value)
+    let result = await n2o.delete(label, value)
+
+    if (result === undefined) {
+      result = {}
+    }
 
     ctx.body = result
   }
@@ -85,7 +89,11 @@ class Node {
   async deleteRelation(ctx) {
     const { relationName, relationValue } = ctx.request.body
 
-    const result = await n2o.deleteRelation(relationName, relationName)
+    let result = await n2o.deleteRelation(relationName, relationValue)
+
+    if (result === undefined) {
+      result = {}
+    }
 
     ctx.body = result
   }

@@ -7,6 +7,7 @@ const nodeR = new Router()
 nodeR.post('/nodes', node.find)
   .post('/node', node.create)
   .post('/relate', node.relate)
+  .delete('/node', node.delete)
 
 module.exports = {
   nodeR
