@@ -8,10 +8,10 @@ class Node {
   }
 
   async create(ctx) {
-    const { label, value } = ctx.request.body
+    const { label, value, onlyProperties } = ctx.request.body
 
     try {
-      const result = await n2o.create(label, value)
+      const result = await n2o.create(label, value, onlyProperties)
 
       ctx.body = result
     } catch (error) {

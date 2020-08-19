@@ -13,7 +13,7 @@ class Neo4j2Offical {
   }
 
   static parseJSON(Object) {
-    return JSON.stringify(Object).replace(/"([^(")"]+)":/g, '$1:')
+    return JSON.stringify(Object).replace(/"([^(")"]+)":/g, '$1:').trim()
   }
 
   async close() {
@@ -65,7 +65,11 @@ class Neo4j2Offical {
    * @param String label 
    * @param Object value 
    */
-  async create(label = '', value = {}) {
+  async create(label = '', value = {}, onlyProperties = false) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
     const session = this.driver.session()
 
     try {
@@ -76,7 +80,12 @@ class Neo4j2Offical {
       const singleRecord = result.records[0]
       const node = singleRecord.get(0)
 
-      return node
+      if (onlyProperties) {
+        return node.properties
+      } else {
+        return node
+      }
+      
     } finally {
       await session.close()
     }
