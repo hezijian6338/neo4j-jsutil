@@ -91,7 +91,7 @@ class Neo4j2Offical {
    * @param String label
    * @param Object value
    */
-  async create(label = '', value = {}, onlyProperties = false) {
+  async create(label = '', value = {}, onlyProperties = false, useMerge = false) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false
     }
@@ -99,9 +99,12 @@ class Neo4j2Offical {
     const session = this.driver.session()
 
     try {
+      
+      const keyword = useMerge ? 'MERGE' : 'CREATE'
+
       const result = await session.writeTransaction((tx) =>
         tx.run(
-          `CREATE (p:${label} ${Neo4j2Offical.reuseJSON(value)}) return p`,
+          `${keyword} (p:${label} ${Neo4j2Offical.reuseJSON(value)}) return p`,
           value
         )
       )
@@ -130,7 +133,8 @@ class Neo4j2Offical {
   async creates(
     list = [{ label: '', value: {} }],
     onlyProperties = false,
-    oldApi = false
+    oldApi = false,
+    useMerge = false
   ) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false
@@ -143,10 +147,13 @@ class Neo4j2Offical {
     try {
       for (let single of list) {
         let result = null
+
+        const keyword = useMerge ? 'MERGE' : 'CREATE'
+
         if (oldApi) {
           result = await session.writeTransaction((tx) =>
             tx.run(
-              `CREATE (p:${single.label} ${Neo4j2Offical.parseJSON(
+              `${keyword} (p:${single.label} ${Neo4j2Offical.parseJSON(
                 single.value
               )}) return p`,
               single.value
@@ -155,7 +162,7 @@ class Neo4j2Offical {
         } else {
           result = await session.writeTransaction((tx) =>
             tx.run(
-              `CREATE (p:${single.label} ${Neo4j2Offical.reuseJSON(
+              `${keyword} (p:${single.label} ${Neo4j2Offical.reuseJSON(
                 single.value
               )}) return p`,
               single.value
