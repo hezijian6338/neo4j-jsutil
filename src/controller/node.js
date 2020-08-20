@@ -127,6 +127,17 @@ class Node {
     ctx.body = result
   }
 
+  async deletes(ctx) {
+    const { list } = ctx.request.body
+
+    const result = await n2o.deletes(list)
+
+    // for (const r of result) {
+    // }
+
+    ctx.body = result
+  }
+
   async deleteRelation(ctx) {
     const { relationName, relationValue } = ctx.request.body
 

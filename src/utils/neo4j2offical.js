@@ -14,7 +14,7 @@ class Neo4j2Offical {
 
   /**
    * TODO: 输出一个 key无 ""的结构
-   * @param {*} Object 
+   * @param {*} Object
    */
   static parseJSON(Object) {
     return JSON.stringify(Object)
@@ -24,7 +24,7 @@ class Neo4j2Offical {
 
   /**
    * TODO: 输出一个可复用的结构
-   * @param {*} Object 
+   * @param {*} Object
    */
   static reuseJSON(Object) {
     const fields = Reflect.ownKeys(Object)
@@ -123,11 +123,15 @@ class Neo4j2Offical {
 
   /**
    * TODO: 批量添加接口
-   * @param Array list 
-   * @param Boolean onlyProperties 
-   * @param Boolean oldApi 
+   * @param Array list
+   * @param Boolean onlyProperties
+   * @param Boolean oldApi
    */
-  async creates(list = [{ label:'', value:'' }], onlyProperties = false, oldApi = false) {
+  async creates(
+    list = [{ label: '', value: {} }],
+    onlyProperties = false,
+    oldApi = false
+  ) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false
     }
@@ -361,6 +365,28 @@ class Neo4j2Offical {
     // const node = singleRecord.get(0)
 
     return result
+  }
+
+  /**
+   * TODO: 批量删除接口
+   * @param Array list 
+   */
+  async deletes(list = [{ label:'', value:{} }]) {
+    const session = this.driver.session()
+
+    let nodes = []
+
+    for (let single of list) {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(`match (a:${single.lable} ${Neo4j2Offical.reuseJSON(single.value)}) delete a`, single.value)
+      )
+
+      console.log(result.summary.query.text)
+
+      nodes.push(result.records)
+    }
+
+    return nodes
   }
 
   /**
