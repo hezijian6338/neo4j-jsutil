@@ -274,9 +274,9 @@ class Neo4j2Offical {
         tx.run(
           `match (a:${label} ${Neo4j2Offical.parseJSON(
             value
-          )})-[${relationName} ${Neo4j2Offical.parseJSON(
+          )})-[r:${relationName} ${Neo4j2Offical.parseJSON(
             relationValue
-          )}]->(b) return b`
+          )}]->(b) return r,b`
         )
       )
 
@@ -285,10 +285,14 @@ class Neo4j2Offical {
       const nodes = []
 
       for (const record of result.records) {
-        const node = record.get(0)
+        const relation = record.get(0)
+        const node = record.get(1)
+        
         if (onlyProperties) {
+          nodes.push(relation.properties)
           nodes.push(node.properties)
         } else {
+          nodes.push(relation)
           nodes.push(node)
         }
       }
