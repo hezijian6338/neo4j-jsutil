@@ -8,10 +8,10 @@ class Node {
   }
 
   async create(ctx) {
-    const { label, value, onlyProperties, userMerge } = ctx.request.body
+    const { label, value, onlyProperties, useMerge } = ctx.request.body
 
     try {
-      const result = await n2o.create(label, value, onlyProperties, userMerge)
+      const result = await n2o.create(label, value, onlyProperties, useMerge)
 
       ctx.body = result
     } catch (error) {
@@ -20,10 +20,10 @@ class Node {
   }
 
   async creates(ctx) {
-    const { list, onlyProperties, oldApi, userMerge } = ctx.request.body
+    const { list, onlyProperties, oldApi, useMerge } = ctx.request.body
 
     try {
-      const result = await n2o.creates(list, onlyProperties, oldApi, userMerge)
+      const result = await n2o.creates(list, onlyProperties, oldApi, useMerge)
 
       ctx.body = result
     } catch (error) {
