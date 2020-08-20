@@ -18,6 +18,23 @@ class Neo4j2Offical {
       .trim()
   }
 
+  static reuseJSON(Object) {
+    const fields = Reflect.ownKeys(Object)
+    // console.log(fields)
+    let result = '{'
+    let count = 0
+    for (let field of fields) {
+      field = field.replace(/'/gi, '')
+      // const value = Reflect.get(this.json, field)
+      // console.log(`{${field}: $${field}}`)
+      result += `${field}: $${field}`
+      if (++count <= fields.length - 1) {
+        result += ', '
+      }
+    }
+    return (result += '}')
+  }
+
   async close() {
     await this.driver.close()
   }
@@ -78,7 +95,10 @@ class Neo4j2Offical {
 
     try {
       const result = await session.writeTransaction((tx) =>
-        tx.run(`CREATE (p:${label} ${Neo4j2Offical.parseJSON(value)}) return p`)
+        tx.run(
+          `CREATE (p:${label} ${Neo4j2Offical.reuseJSON(value)}) return p`,
+          value
+        )
       )
 
       console.log(result.summary.query.text)
@@ -91,6 +111,56 @@ class Neo4j2Offical {
       } else {
         return node
       }
+    } finally {
+      await session.close()
+    }
+  }
+
+  async creates(list = [], onlyProperties = false, oldApi = false) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    const session = this.driver.session()
+
+    const nodes = []
+
+    try {
+      for (let single of list) {
+        let result = null
+        if (oldApi) {
+          result = await session.writeTransaction((tx) =>
+            tx.run(
+              `CREATE (p:${single.label} ${Neo4j2Offical.parseJSON(
+                single.value
+              )}) return p`,
+              single.value
+            )
+          )
+        } else {
+          result = await session.writeTransaction((tx) =>
+            tx.run(
+              `CREATE (p:${single.label} ${Neo4j2Offical.reuseJSON(
+                single.value
+              )}) return p`,
+              single.value
+            )
+          )
+        }
+
+        console.log(result.summary.query.text)
+
+        const singleRecord = result.records[0]
+        const node = singleRecord.get(0)
+
+        if (onlyProperties) {
+          nodes.push(node.properties)
+        } else {
+          nodes.push(node)
+        }
+      }
+
+      return nodes
     } finally {
       await session.close()
     }

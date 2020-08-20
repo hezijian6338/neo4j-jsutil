@@ -19,6 +19,18 @@ class Node {
     }
   }
 
+  async creates(ctx) {
+    const { list, onlyProperties, oldApi } = ctx.request.body
+
+    try {
+      const result = await n2o.creates(list, onlyProperties, oldApi)
+
+      ctx.body = result
+    } catch (error) {
+      ctx.throw(500, error)
+    }
+  }
+
   async relate(ctx) {
     const {
       nodeLabel,

@@ -7,6 +7,7 @@ const nodeR = new Router()
 nodeR
   .post('/nodes', node.find)
   .post('/node', node.create)
+  .post('/node/list', node.creates)
   .put('/node', node.update)
   .delete('/node', node.delete)
   .post('/relate', node.relate)
