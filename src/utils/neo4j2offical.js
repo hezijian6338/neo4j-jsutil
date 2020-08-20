@@ -12,21 +12,26 @@ class Neo4j2Offical {
     // this.session = this.driver.session()
   }
 
+  /**
+   * TODO: 输出一个 key无 ""的结构
+   * @param {*} Object 
+   */
   static parseJSON(Object) {
     return JSON.stringify(Object)
       .replace(/"([^(")"]+)":/g, '$1:')
       .trim()
   }
 
+  /**
+   * TODO: 输出一个可复用的结构
+   * @param {*} Object 
+   */
   static reuseJSON(Object) {
     const fields = Reflect.ownKeys(Object)
-    // console.log(fields)
     let result = '{'
     let count = 0
     for (let field of fields) {
       field = field.replace(/'/gi, '')
-      // const value = Reflect.get(this.json, field)
-      // console.log(`{${field}: $${field}}`)
       result += `${field}: $${field}`
       if (++count <= fields.length - 1) {
         result += ', '
@@ -40,7 +45,7 @@ class Neo4j2Offical {
   }
 
   /**
-   *
+   *  TODO: 查询接口
    * @param String label
    * @param Object value
    */
@@ -82,7 +87,7 @@ class Neo4j2Offical {
   }
 
   /**
-   *
+   * TODO: 添加接口
    * @param String label
    * @param Object value
    */
@@ -116,7 +121,13 @@ class Neo4j2Offical {
     }
   }
 
-  async creates(list = [], onlyProperties = false, oldApi = false) {
+  /**
+   * TODO: 批量添加接口
+   * @param Array list 
+   * @param Boolean onlyProperties 
+   * @param Boolean oldApi 
+   */
+  async creates(list = [{ label:'', value:'' }], onlyProperties = false, oldApi = false) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false
     }
