@@ -270,7 +270,7 @@ class Neo4j2Offical {
     const session = this.driver.session()
 
     if (relationName !== '') {
-      relationName += `:${relationName}`
+      relationName = `:${relationName}`
     }
 
     try {
@@ -332,7 +332,7 @@ class Neo4j2Offical {
     const session = this.driver.session()
 
     if (relationName !== '') {
-      relationName += `:${relationName}`
+      relationName = `:${relationName}`
     }
 
     try {
