@@ -115,6 +115,32 @@ class Node {
     ctx.body = result
   }
 
+  async updateRelation(ctx) {
+    const {
+      nodeLabel,
+      nodeValue,
+      relateNodeLabel,
+      relateNodeValue,
+      relationName,
+      relationValue,
+      updateValue,
+      onlyProperties,
+    } = ctx.request.body
+
+    const result = await n2o.updateRelation(
+      nodeLabel,
+      nodeValue,
+      relateNodeLabel,
+      relateNodeValue,
+      relationName,
+      relationValue,
+      updateValue,
+      onlyProperties
+    )
+
+    ctx.body = result
+  }
+
   async delete(ctx) {
     const { label, value } = ctx.request.body
 

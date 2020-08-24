@@ -91,7 +91,12 @@ class Neo4j2Offical {
    * @param String label
    * @param Object value
    */
-  async create(label = '', value = {}, onlyProperties = false, useMerge = false) {
+  async create(
+    label = '',
+    value = {},
+    onlyProperties = false,
+    useMerge = false
+  ) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false
     }
@@ -99,7 +104,6 @@ class Neo4j2Offical {
     const session = this.driver.session()
 
     try {
-      
       const keyword = useMerge ? 'MERGE' : 'CREATE'
 
       const result = await session.writeTransaction((tx) =>
@@ -291,7 +295,7 @@ class Neo4j2Offical {
       for (const record of result.records) {
         const relation = record.get(0)
         const node = record.get(1)
-        
+
         if (onlyProperties) {
           nodes.push(relation.properties)
           nodes.push(node.properties)
@@ -391,16 +395,21 @@ class Neo4j2Offical {
 
   /**
    * TODO: 批量删除接口
-   * @param Array list 
+   * @param Array list
    */
-  async deletes(list = [{ label:'', value:{} }]) {
+  async deletes(list = [{ label: '', value: {} }]) {
     const session = this.driver.session()
 
     let nodes = []
 
     for (let single of list) {
       const result = await session.writeTransaction((tx) =>
-        tx.run(`match (a:${single.lable} ${Neo4j2Offical.reuseJSON(single.value)}) delete a`, single.value)
+        tx.run(
+          `match (a:${single.lable} ${Neo4j2Offical.reuseJSON(
+            single.value
+          )}) delete a`,
+          single.value
+        )
       )
 
       console.log(result.summary.query.text)
@@ -449,6 +458,50 @@ class Neo4j2Offical {
         `merge (a:${label} ${Neo4j2Offical.parseJSON(
           value
         )}) set a += ${Neo4j2Offical.parseJSON(updateValue)} return a`
+      )
+    )
+
+    const singleRecord = result.records[0]
+    const node = singleRecord.get(0)
+
+    console.log(result.summary.query.text)
+
+    if (onlyProperties) {
+      return node.properties
+    } else {
+      return node
+    }
+  }
+
+  async updateRelation(
+    nodeLabel = '',
+    nodeValue = {},
+    relateNodeLabel = '',
+    relateNodeValue = {},
+    relationName = '',
+    relationValue = {},
+    updateValue = {},
+    onlyProperties = false
+  ) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    if (relationName !== '') {
+      relationName = `:${relationName}`
+    }
+
+    const session = this.driver.session()
+
+    const result = await session.writeTransaction((tx) =>
+      tx.run(
+        `match (a:${nodeLabel} ${Neo4j2Offical.parseJSON(
+          nodeValue
+        )})-[r${relationName} ${Neo4j2Offical.parseJSON(
+          relationValue
+        )}]->(b:${relateNodeLabel} ${Neo4j2Offical.parseJSON(
+          relateNodeValue
+        )}) set r += ${Neo4j2Offical.parseJSON(updateValue)} return r`
       )
     )
 
