@@ -67,6 +67,18 @@ class Node {
     }
   }
 
+  async findById(ctx) {
+    const { label, id, onlyProperties } = ctx.request.body
+
+    try {
+      const result = await n2o.findById(label, id, onlyProperties)
+
+      ctx.body = result
+    } catch (error) {
+      ctx.throw(500, error)
+    }
+  }
+
   async findRelate(ctx) {
     const {
       label,

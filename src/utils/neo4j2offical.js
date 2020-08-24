@@ -44,6 +44,35 @@ class Neo4j2Offical {
     await this.driver.close()
   }
 
+  async findById(label = '', id = 0, onlyProperties = false) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    const session = this.driver.session()
+
+    try {
+      const result = await session.readTransaction((tx) =>
+        tx.run(`MATCH (a:${label}) WHERE ID(a)=${id} RETURN a`)
+      )
+
+      console.log(result.summary.query.text)
+
+      const singleRecord = result.records[0]
+
+      const node = singleRecord.get(0)
+
+      if (onlyProperties) {
+        return node.properties
+      } else {
+        return node
+      }
+
+    } finally {
+      await session.close()
+    }
+  }
+
   /**
    *  TODO: 查询接口
    * @param String label

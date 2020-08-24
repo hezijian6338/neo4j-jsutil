@@ -6,6 +6,7 @@ const node = new Node()
 const nodeR = new Router()
 nodeR
   .post('/nodes', node.find)
+  .post('/node/id', node.findById)
   .post('/node', node.create)
   .post('/node/list', node.creates)
   .put('/node', node.update)
