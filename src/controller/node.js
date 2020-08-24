@@ -165,6 +165,18 @@ class Node {
     ctx.body = result
   }
 
+  async deleteById(ctx) {
+    const { label, id } = ctx.request.body
+
+    let result = await n2o.deleteById(label, id)
+
+    if (result === undefined) {
+      result = {}
+    }
+
+    ctx.body = result
+  }
+
   async deletes(ctx) {
     const { list } = ctx.request.body
 

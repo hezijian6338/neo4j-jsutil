@@ -11,6 +11,7 @@ nodeR
   .post('/node/list', node.creates)
   .put('/node', node.update)
   .delete('/node', node.delete)
+  .delete('/node/id', node.deleteById)
   .delete('/node/list', node.deletes)
   .post('/relate', node.relate)
   .put('/relation', node.updateRelation)

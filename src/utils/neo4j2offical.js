@@ -422,6 +422,19 @@ class Neo4j2Offical {
     return result
   }
 
+  async deleteById(lable = '', id = '') {
+    const session = this.driver.session()
+
+    const result = await session.writeTransaction((tx) => {
+      tx.run(`match (a:${lable}) where ID(a)=${id} delete a`)
+    })
+
+    // const singleRecord = result.records[0]
+    // const node = singleRecord.get(0)
+
+    return result
+  }
+
   /**
    * TODO: 批量删除接口
    * @param Array list
