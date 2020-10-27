@@ -86,9 +86,16 @@ class Neo4j2Offical {
     const session = this.driver.session()
 
     try {
-      const result = await session.readTransaction((tx) =>
+      let result = null
+      if (label === '') {
+        result = await session.readTransaction((tx) =>
+        tx.run(`MATCH (a) return a`)
+        )
+      } else {
+        result = await session.readTransaction((tx) =>
         tx.run(`MATCH (a:${label} ${Neo4j2Offical.parseJSON(value)}) return a`)
-      )
+        )
+      }
 
       console.log(result.summary.query.text)
 
