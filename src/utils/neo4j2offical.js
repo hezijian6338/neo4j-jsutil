@@ -1,4 +1,13 @@
 class Neo4j2Offical {
+  instance = null
+
+  static getInstance() {
+    if (this.instance == null) {
+      this.instance = new Neo4j2Offical()
+    }
+    return this.instance
+  }
+
   constructor() {
     const neo4j = require('neo4j-driver')
 
@@ -567,4 +576,4 @@ class Neo4j2Offical {
   }
 }
 
-module.exports = { n2o: new Neo4j2Offical() }
+module.exports = { n2o: Neo4j2Offical.getInstance() }
