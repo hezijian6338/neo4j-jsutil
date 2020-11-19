@@ -53,6 +53,23 @@ class Neo4j2Offical {
     await this.driver.close()
   }
 
+  /**
+   * TODO: 输出节点类型列表
+   * @param {*} onlyProperties 
+   */
+  async findNodeTypeList(onlyProperties = false) {
+    let list = await this.find('', {}, onlyProperties)
+    let typeList = []
+    list.map(n => {
+      const labelType = n.labels[0]
+      if (typeList.indexOf(labelType) === -1) {
+        typeList.push(labelType)
+      }
+    })
+
+    return typeList
+  }
+
   async findById(label = '', id = 0, onlyProperties = false) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false

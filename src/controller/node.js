@@ -55,6 +55,18 @@ class Node {
     ctx.body = result
   }
 
+  async findNodeTypeList(ctx) {
+    const { onlyProperties } = ctx.request.body
+
+    try {
+      const result = await n2o.findNodeTypeList(onlyProperties)
+
+      ctx.body = result
+    } catch (error) {
+      ctx.throw(500, error)
+    }
+  }
+
   async find(ctx) {
     const { label, value, onlyProperties } = ctx.request.body
 
