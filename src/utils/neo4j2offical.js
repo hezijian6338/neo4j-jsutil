@@ -55,12 +55,12 @@ class Neo4j2Offical {
 
   /**
    * TODO: 输出节点类型列表
-   * @param {*} onlyProperties 
+   * @param {*} onlyProperties
    */
   async findNodeTypeList(onlyProperties = false) {
     let list = await this.find('', {}, onlyProperties)
     let typeList = []
-    list.map(n => {
+    list.map((n) => {
       const labelType = n.labels[0]
       if (typeList.indexOf(labelType) === -1) {
         typeList.push(labelType)
@@ -93,7 +93,6 @@ class Neo4j2Offical {
       } else {
         return node
       }
-
     } finally {
       await session.close()
     }
@@ -115,11 +114,13 @@ class Neo4j2Offical {
       let result = null
       if (label === '') {
         result = await session.readTransaction((tx) =>
-        tx.run(`MATCH (a) return a`)
+          tx.run(`MATCH (a) return a`)
         )
       } else {
         result = await session.readTransaction((tx) =>
-        tx.run(`MATCH (a:${label} ${Neo4j2Offical.parseJSON(value)}) return a`)
+          tx.run(
+            `MATCH (a:${label} ${Neo4j2Offical.parseJSON(value)}) return a`
+          )
         )
       }
 
@@ -353,16 +354,17 @@ class Neo4j2Offical {
       console.log(result.summary.query.text)
 
       const nodes = []
+      const relations = []
 
       for (const record of result.records) {
         const relation = record.get(0)
         const node = record.get(1)
 
         if (onlyProperties) {
-          nodes.push(relation.properties)
+          relations.push(relation.properties)
           nodes.push(node.properties)
         } else {
-          nodes.push(relation)
+          relations.push(relation)
           nodes.push(node)
         }
       }
@@ -370,7 +372,7 @@ class Neo4j2Offical {
       // const singleRecord = result.records[0]
       // const node = singleRecord.get(0)
 
-      return nodes
+      return { nodes, relations }
     } finally {
       await session.close()
     }
@@ -415,15 +417,16 @@ class Neo4j2Offical {
       console.log(result.summary.query.text)
 
       const nodes = []
+      const relations = []
 
       for (const record of result.records) {
         const relation = record.get(0)
         const node = record.get(1)
         if (onlyProperties) {
-          nodes.push(relation.properties)
+          relations.push(relation.properties)
           nodes.push(node.properties)
         } else {
-          nodes.push(relation)
+          relations.push(relation)
           nodes.push(node)
         }
       }
@@ -431,7 +434,7 @@ class Neo4j2Offical {
       // const singleRecord = result.records[0]
       // const node = singleRecord.get(0)
 
-      return nodes
+      return { nodes, relations }
     } finally {
       await session.close()
     }
