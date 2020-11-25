@@ -498,6 +498,60 @@ class Neo4j2Offical {
     return nodes
   }
 
+  async deleteProperties(label = '', value = {}, deleteValues = []) {
+    const session = this.driver.session()
+
+    let removeStr = ''
+
+    if (deleteValues.length !== 0) {
+      deleteValues.forEach(v => {
+        if (removeStr.length !== 0) {
+          removeStr = `${removeStr}, `
+        }
+        removeStr = `${removeStr} n.${v.replace(/\//g,'').trim()}`
+      })
+    }
+
+    try {
+      await session.writeTransaction((tx) => {
+        tx.run(`match (n:${label} ${Neo4j2Offical.parseJSON(value)}) remove ${removeStr} return n`)
+      })
+
+      console.log(`match (n:${label} ${Neo4j2Offical.parseJSON(value)}) remove ${removeStr} return n`)
+
+      return []
+    } finally {
+      await session.close()
+    }
+  }
+
+  async deletePropertiesById(label = '', id = '', deleteValues = []) {
+    const session = this.driver.session()
+
+    let removeStr = ''
+
+    if (deleteValues.length !== 0) {
+      deleteValues.forEach(v => {
+        if (removeStr.length !== 0) {
+          removeStr = `${removeStr}, `
+        }
+        removeStr = `${removeStr} n.${v.replace(/\//g,'').trim()}`
+      })
+    }
+
+    try {
+      await session.writeTransaction((tx) => {
+        tx.run(`match (n:${label}) where ID(n)=${id} remove ${removeStr} return n`)
+      })
+
+      console.log(`match (n:${label}) where ID(n)=${id} remove ${removeStr} return n`)
+
+      return []
+    } finally {
+      await session.close()
+    }
+  }
+
   /**
    *
    * @param String label

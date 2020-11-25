@@ -14,6 +14,8 @@ nodeR
   .delete('/node', node.delete)
   .delete('/node/id', node.deleteById)
   .delete('/node/list', node.deletes)
+  .delete('/node/properties', node.deleteProperties)
+  .delete('/node/id/properties', node.deletePropertiesById)
   .post('/relate', node.relate)
   .put('/relation', node.updateRelation)
   .post('/relate/node', node.findRelate)

@@ -200,6 +200,22 @@ class Node {
     ctx.body = result
   }
 
+  async deleteProperties(ctx) {
+    const { label, value, deleteValues } = ctx.request.body
+
+    const result = await n2o.deleteProperties(label, value, deleteValues)
+
+    ctx.body = result
+  }
+
+  async deletePropertiesById(ctx) {
+    const { label, id, deleteValues } = ctx.request.body
+
+    const result = await n2o.deletePropertiesById(label, id, deleteValues)
+
+    ctx.body = result
+  }
+
   async deleteRelation(ctx) {
     const { relationName, relationValue } = ctx.request.body
 
