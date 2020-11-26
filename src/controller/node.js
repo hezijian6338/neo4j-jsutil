@@ -131,6 +131,14 @@ class Node {
     ctx.body = result
   }
 
+  async findPropertie2Node(ctx) {
+    const { property, onlyProperties } = ctx.request.body
+
+    const result = await n2o.findPropertie2Node(property, onlyProperties)
+
+    ctx.body = result
+  }
+
   async update(ctx) {
     const { label, value, update } = ctx.request.body
 

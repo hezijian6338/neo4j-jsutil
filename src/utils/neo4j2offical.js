@@ -440,6 +440,37 @@ class Neo4j2Offical {
     }
   }
 
+  async findPropertie2Node(property = 'name', onlyProperties = false) {
+    const session = this.driver.session()
+
+    if (property === '') {
+      property = 'name'
+    }
+
+    try {
+      const result = await session.readTransaction((tx) =>
+        tx.run(
+          `MATCH (n) where EXISTS(n.${property}) return n`
+        ))
+
+        console.log(result.summary.query.text)
+
+        const singleRecord = result.records[0]
+        if (singleRecord === undefined) {
+          return {}
+        }
+        const node = singleRecord.get(0)
+
+        if (onlyProperties) {
+          return node.properties
+        } else {
+          return node
+        }
+    } finally {
+      await session.close()
+    }
+  }
+
   /**
    *
    * @param String lable
