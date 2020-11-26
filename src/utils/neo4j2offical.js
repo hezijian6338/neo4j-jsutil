@@ -459,12 +459,19 @@ class Neo4j2Offical {
         if (singleRecord === undefined) {
           return {}
         }
-        const node = singleRecord.get(0)
+
+        const nodes = []
 
         if (onlyProperties) {
-          return node.properties
+          for (let record of result.records) {
+            nodes.push(record.get(0).properties)
+          }
+          return nodes
         } else {
-          return node
+          for (let record of result.records) {
+            nodes.push(record.get(0))
+          }
+          return nodes
         }
     } finally {
       await session.close()
