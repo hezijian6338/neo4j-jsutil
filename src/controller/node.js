@@ -131,6 +131,14 @@ class Node {
     ctx.body = result
   }
 
+  async findRelateById(ctx) {
+    const { id, onlyProperties } = ctx.request.body
+
+    const result = await n2o.findRelateById(id, onlyProperties)
+
+    ctx.body = result
+  }
+
   async findPropertie2Node(ctx) {
     const { property, onlyProperties } = ctx.request.body
 

@@ -21,6 +21,7 @@ nodeR
   .put('/relation', node.updateRelation)
   .post('/relate/node', node.findRelate)
   .post('/related/node', node.findRelated)
+  .post('/relation/id', node.findRelateById)
   .delete('/relation', node.deleteRelation)
 
 module.exports = {

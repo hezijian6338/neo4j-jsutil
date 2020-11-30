@@ -440,6 +440,36 @@ class Neo4j2Offical {
     }
   }
 
+  async findRelateById(id, onlyProperties = false) {
+    const session = this.driver.session()
+
+    if (id === '' || id === undefined) {
+      return {}
+    }
+
+    try {
+      const result = await session.readTransaction((tx) =>
+      tx.run(
+        `match ()-[r]->() where ID(r) = ${id} return r`
+        )
+      )
+
+      console.log(result.summary.query.text)
+
+      const record = result.records[0]
+
+      const relation = record.get(0)
+        if (onlyProperties) {
+          return relation.properties
+        } else {
+          return relation
+      }
+
+    } finally {
+      await session.close()
+    }
+  }
+
   async findPropertie2Node(property = 'name', onlyProperties = false) {
     const session = this.driver.session()
 
