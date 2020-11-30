@@ -95,16 +95,20 @@ class Node {
     const {
       label,
       value,
+      labelId,
       relationName,
       relationValue,
+      relationId,
       onlyProperties,
     } = ctx.request.body
 
     const result = await n2o.findRelate(
       label,
       value,
+      labelId,
       relationName,
       relationValue,
+      relationId,
       onlyProperties
     )
 
@@ -115,16 +119,20 @@ class Node {
     const {
       label,
       value,
+      labelId,
       relationName,
       relationValue,
+      relationId,
       onlyProperties,
     } = ctx.request.body
 
     const result = await n2o.findRelated(
       label,
       value,
+      labelId,
       relationName,
       relationValue,
+      relationId,
       onlyProperties
     )
 

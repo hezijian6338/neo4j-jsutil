@@ -326,8 +326,10 @@ class Neo4j2Offical {
   async findRelate(
     label = '',
     value = {},
+    labelId,
     relationName = '',
     relationValue = {},
+    relationId,
     onlyProperties = false
   ) {
     if (onlyProperties === undefined || onlyProperties === null) {
@@ -341,15 +343,39 @@ class Neo4j2Offical {
     }
 
     try {
-      const result = await session.readTransaction((tx) =>
-        tx.run(
-          `match (a:${label} ${Neo4j2Offical.parseJSON(
-            value
-          )})-[r${relationName} ${Neo4j2Offical.parseJSON(
-            relationValue
-          )}]->(b) return r,b`
+      let result = ''
+
+      if (relationId !== '' && relationId !== undefined && relationId !== null) {
+        result = await session.readTransaction((tx) =>
+          tx.run(
+            `match (a:${label} ${Neo4j2Offical.parseJSON(
+              value
+            )})-[r${relationName} ${Neo4j2Offical.parseJSON(
+              relationValue
+            )}]->(b) where ID(r) = ${relationId} return r,b`
+          )
         )
-      )
+      } else if (labelId !== '' && labelId !== undefined && labelId !== null) {
+        result = await session.readTransaction((tx) =>
+          tx.run(
+            `match (a:${label} ${Neo4j2Offical.parseJSON(
+              value
+            )})-[r${relationName} ${Neo4j2Offical.parseJSON(
+              relationValue
+            )}]->(b) where ID(b) = ${labelId} return r,b`
+          )
+        )
+      } else {
+        result = await session.readTransaction((tx) =>
+          tx.run(
+            `match (a:${label} ${Neo4j2Offical.parseJSON(
+              value
+            )})-[r${relationName} ${Neo4j2Offical.parseJSON(
+              relationValue
+            )}]->(b) return r,b`
+          )
+        )
+      }
 
       console.log(result.summary.query.text)
 
@@ -389,8 +415,10 @@ class Neo4j2Offical {
   async findRelated(
     label = '',
     value = {},
+    labelId,
     relationName = '',
     relationValue = {},
+    relationId,
     onlyProperties = false
   ) {
     if (onlyProperties === undefined || onlyProperties === null) {
@@ -404,15 +432,39 @@ class Neo4j2Offical {
     }
 
     try {
-      const result = await session.readTransaction((tx) =>
-        tx.run(
-          `match (a:${label} ${Neo4j2Offical.parseJSON(
-            value
-          )})<-[r${relationName} ${Neo4j2Offical.parseJSON(
-            relationValue
-          )}]-(b) return r,b`
+      let result = ''
+
+      if (relationId !== '' && relationId !== undefined && relationId !== null) {
+        result = await session.readTransaction((tx) =>
+          tx.run(
+            `match (a:${label} ${Neo4j2Offical.parseJSON(
+              value
+            )})<-[r${relationName} ${Neo4j2Offical.parseJSON(
+              relationValue
+            )}]-(b) where ID(r) = ${relationId} return r,b`
+          )
         )
-      )
+      } else if (labelId !== '' && labelId !== undefined && labelId !== null) {
+        result = await session.readTransaction((tx) =>
+          tx.run(
+            `match (a:${label} ${Neo4j2Offical.parseJSON(
+              value
+            )})<-[r${relationName} ${Neo4j2Offical.parseJSON(
+              relationValue
+            )}]-(b) where ID(b) = ${labelId} return r,b`
+          )
+        )
+      } else {
+        result = await session.readTransaction((tx) =>
+          tx.run(
+            `match (a:${label} ${Neo4j2Offical.parseJSON(
+              value
+            )})<-[r${relationName} ${Neo4j2Offical.parseJSON(
+              relationValue
+            )}]-(b) return r,b`
+          )
+        )
+      }
 
       console.log(result.summary.query.text)
 
@@ -443,7 +495,7 @@ class Neo4j2Offical {
   async findRelateById(id, onlyProperties = false) {
     const session = this.driver.session()
 
-    if (id === '' || id === undefined) {
+    if (relationId !== '' && relationId !== undefined && relationId !== null) {
       return {}
     }
 
