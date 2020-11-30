@@ -362,7 +362,7 @@ class Neo4j2Offical {
               value
             )})-[r${relationName} ${Neo4j2Offical.parseJSON(
               relationValue
-            )}]->(b) where ID(b) = ${labelId} return r,b`
+            )}]->(b) where ID(a) = ${labelId} return r,b`
           )
         )
       } else {
@@ -451,7 +451,7 @@ class Neo4j2Offical {
               value
             )})<-[r${relationName} ${Neo4j2Offical.parseJSON(
               relationValue
-            )}]-(b) where ID(b) = ${labelId} return r,b`
+            )}]-(b) where ID(a) = ${labelId} return r,b`
           )
         )
       } else {
