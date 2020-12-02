@@ -633,6 +633,12 @@ class Neo4j2Offical {
     return nodes
   }
 
+  /**
+   * TODO: 删除节点属性
+   * @param String label 
+   * @param Object value 
+   * @param List deleteValues 
+   */
   async deleteProperties(label = '', value = {}, deleteValues = []) {
     const session = this.driver.session()
 
@@ -660,6 +666,12 @@ class Neo4j2Offical {
     }
   }
 
+  /**
+   * TODO: 根据节点 id删除属性
+   * @param String label 
+   * @param String id 
+   * @param List deleteValues 
+   */
   async deletePropertiesById(label = '', id = '', deleteValues = []) {
     const session = this.driver.session()
 
