@@ -700,7 +700,7 @@ class Neo4j2Offical {
   }
 
   /**
-   *
+   * TODO: 删除关系 (所有)
    * @param String label
    * @param Object value
    */
