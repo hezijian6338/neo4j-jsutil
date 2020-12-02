@@ -795,6 +795,49 @@ class Neo4j2Offical {
       return node
     }
   }
+
+  /**
+   * TODO: 根据 两个节点 ID更新定点关系属性
+   * @param String relateId 主动关系节点 Id
+   * @param String relatedId 被动关系节点 Id
+   * @param Object updateValue 更新的属性内容
+   * @param Boolean onlyProperties 
+   */
+  async updateRelationById(relateId, relatedId, updateValue = {}, onlyProperties = false) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    if (relateId === undefined || relatedId === undefined || relateId === '' || relatedId === '' || relateId === null || relatedId === null) {
+      return {}
+    }
+
+    const session = this.driver.session()
+
+    try {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(
+          `match (a) - [r] -> (b) where ID(a)=${relateId} and ID(b)=${relatedId} set r = ${Neo4j2Offical.parseJSON(
+            updateValue
+          )} return r`
+        )
+      )
+
+      console.log(result.summary.query.text)
+
+      const singleRecord = result.records[0]
+      const relation = singleRecord.get(0)
+
+      if (onlyProperties) {
+        return relation.properties
+      } else {
+        return relation
+      }
+  
+    } finally {
+      await session.close()
+    }
+  }
 }
 
 module.exports = { n2o: Neo4j2Offical.getInstance() }
