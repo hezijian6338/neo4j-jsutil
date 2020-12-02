@@ -492,6 +492,11 @@ class Neo4j2Offical {
     }
   }
 
+  /**
+   * TODO: 根据 id查询关系
+   * @param String id 
+   * @param Boolean onlyProperties 
+   */
   async findRelateById(id, onlyProperties = false) {
     const session = this.driver.session()
 
@@ -522,6 +527,11 @@ class Neo4j2Offical {
     }
   }
 
+  /**
+   * TODO: 根据属性查找节点 (有则返回, 无则空)
+   * @param String property 
+   * @param String onlyProperties 
+   */
   async findPropertie2Node(property = 'name', onlyProperties = false) {
     const session = this.driver.session()
 
@@ -578,6 +588,11 @@ class Neo4j2Offical {
     return result
   }
 
+  /**
+   * TODO: 根据 id删除
+   * @param String lable 
+   * @param String id 
+   */
   async deleteById(lable = '', id = '') {
     const session = this.driver.session()
 
