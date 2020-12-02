@@ -248,6 +248,14 @@ class Node {
     ctx.body = result
   }
 
+  async deleteRelationB2Node(ctx) {
+    const { relateId, relatedId } = ctx.request.body
+
+    const result = await n2o.deleteRelationB2Node(relateId, relatedId)
+
+    ctx.body = result
+  }
+
   async deleteRelation(ctx) {
     const { relationName, relationValue } = ctx.request.body
 

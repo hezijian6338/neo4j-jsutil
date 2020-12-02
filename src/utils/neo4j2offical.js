@@ -700,6 +700,31 @@ class Neo4j2Offical {
   }
 
   /**
+   * TODO: 删除节点间关联的关系
+   * @param String relateId 
+   * @param String relatedId 
+   */
+  async deleteRelationB2Node(relateId, relatedId) {
+    if (relateId === undefined || relatedId === undefined || relateId === '' || relatedId === '' || relateId === null || relatedId === null) {
+      return {}
+    }
+
+    const session = this.driver.session()
+
+    try {
+      await session.writeTransaction((tx) => {
+        tx.run(`match (a) - [r] -> (b) where ID(a)=${relateId} and ID(b)=${relatedId} delete r`)
+      })
+
+      console.log(`match (a) - [r] -> (b) where ID(a)=${relateId} and ID(b)=${relatedId} delete r`)
+
+      return {}
+    } finally {
+      await session.close()
+    }
+  }
+
+  /**
    * TODO: 删除关系 (所有)
    * @param String label
    * @param Object value

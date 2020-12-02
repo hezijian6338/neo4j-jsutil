@@ -23,6 +23,7 @@ nodeR
   .post('/relate/node', node.findRelate)
   .post('/related/node', node.findRelated)
   .post('/relation/id', node.findRelateById)
+  .delete('/relation/node/2/node', node.deleteRelationB2Node)
   .delete('/relation', node.deleteRelation)
 
 module.exports = {
