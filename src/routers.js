@@ -20,6 +20,7 @@ nodeR
   .post('/relate', node.relate)
   .put('/relation', node.updateRelation)
   .put('/relation/id', node.updateRelationById)
+  .put('/relation/2/all', node.updateRelation2All)
   .post('/relate/node', node.findRelate)
   .post('/related/node', node.findRelated)
   .post('/relation/id', node.findRelateById)

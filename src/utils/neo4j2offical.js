@@ -863,6 +863,51 @@ class Neo4j2Offical {
       await session.close()
     }
   }
+
+  /**
+   * TODO: 更新全部关系属性内容
+   * @param String label 
+   * @param Object updateValue 
+   * @param Boolean onlyProperties 
+   */
+  async updateRelation2All(label, updateValue, onlyProperties = false) {
+    if (label === null || label === undefined || label === '') {
+      return []
+    }
+
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    const session = this.driver.session()
+
+    try {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(
+          `match () - [r:${label}] -> () set r = ${Neo4j2Offical.parseJSON(
+            updateValue
+          )} return r`
+        )
+      )
+
+      console.log(result.summary.query.text)
+
+      const relations = []
+
+      for (const record of result.records) {
+        const relation = record.get(0)
+        if (onlyProperties) {
+          relations.push(relation.properties)
+        } else {
+          relations.push(relation)
+        }
+      }
+
+      return relations
+    } finally {
+      await session.close()
+    }
+  }
 }
 
 module.exports = { n2o: Neo4j2Offical.getInstance() }
