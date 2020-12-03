@@ -18,6 +18,7 @@ nodeR
   .delete('/node/properties', node.deleteProperties)
   .delete('/node/id/properties', node.deletePropertiesById)
   .post('/relate', node.relate)
+  .post('/relate/Id', node.relateById)
   .put('/relation', node.updateRelation)
   .put('/relation/id', node.updateRelationById)
   .put('/relation/2/all', node.updateRelation2All)
