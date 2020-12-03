@@ -828,7 +828,7 @@ class Neo4j2Offical {
    * @param Object updateValue 更新的属性内容
    * @param Boolean onlyProperties 
    */
-  async updateRelationById(relateId, relatedId, updateValue = {}, onlyProperties = false) {
+  async updateRelationById(relateId, relatedId, relationId, updateValue = {}, onlyProperties = false) {
     if (onlyProperties === undefined || onlyProperties === null) {
       onlyProperties = false
     }
@@ -842,7 +842,7 @@ class Neo4j2Offical {
     try {
       const result = await session.writeTransaction((tx) =>
         tx.run(
-          `match (a) - [r] -> (b) where ID(a)=${relateId} and ID(b)=${relatedId} set r = ${Neo4j2Offical.parseJSON(
+          `match (a) - [r] -> (b) where ID(a)=${relateId} and ID(b)=${relatedId} and ID(r)=${relationId} set r = ${Neo4j2Offical.parseJSON(
             updateValue
           )} return r`
         )
