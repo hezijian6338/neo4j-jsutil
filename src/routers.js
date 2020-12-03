@@ -26,6 +26,7 @@ nodeR
   .post('/relation/id', node.findRelateById)
   .delete('/relation/node/2/node', node.deleteRelationB2Node)
   .delete('/relation', node.deleteRelation)
+  .get('/keys', node.findKeysAndValues)
 
 module.exports = {
   nodeR,

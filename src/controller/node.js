@@ -275,6 +275,15 @@ class Node {
 
     ctx.body = result
   }
+
+  async findKeysAndValues(ctx) {
+    let keys = await n2o.findNodesKeys()
+
+    // TODO: 这里厉害了, map不能直接转成 object传递到 ctx.body中
+    const obj = [...keys.entries()].reduce((obj, [key, value]) => (obj[key] = value, obj), {})
+    
+    ctx.body = obj
+  }
 }
 
 module.exports = Node

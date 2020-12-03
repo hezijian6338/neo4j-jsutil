@@ -6,7 +6,7 @@ module.exports = function () {
         console.log(ctx.request.body)
       }
       if (ctx.method === 'GET') {
-        console.log(ctx.params)
+        console.log(ctx.query)
       }
       await next()
     } catch (error) {

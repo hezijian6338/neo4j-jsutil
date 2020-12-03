@@ -908,6 +908,64 @@ class Neo4j2Offical {
       await session.close()
     }
   }
+
+  async findNodesKeys() {
+    const session = this.driver.session()
+
+    try {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(
+          `match (a) return keys(a)`
+        )
+      )
+
+      console.log(result.summary.query.text)
+
+      const keys = new Map()
+
+      for (const record of result.records) {
+        const key = record.get(0)
+        for (let k of key) {
+          if (!keys.has(k)) {
+            const l = await this.findKeysValue(k)
+            keys.set(k, l)
+          }
+        }
+      }
+
+      return keys
+    } finally {
+      await session.close()
+    }
+  }
+
+  async findKeysValue(key) {
+    const session = this.driver.session()
+
+    try {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(
+          `MATCH (n) WHERE EXISTS(n.${key}) RETURN DISTINCT "node" as entity, n.${key} as ${key}`
+        )
+      )
+
+      console.log(result.summary.query.text)
+
+      const values = []
+
+      for (const record of result.records) {
+        const v = record.get(1)
+        // console.log(record)
+        values.push(v)
+      }
+
+      // console.log(values)
+
+      return values
+    } finally {
+      await session.close()
+    }
+  }
 }
 
 module.exports = { n2o: Neo4j2Offical.getInstance() }
