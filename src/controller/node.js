@@ -277,12 +277,14 @@ class Node {
   }
 
   async findKeysAndValues(ctx) {
-    let keys = await n2o.findNodesKeys()
+    let keys1 = await n2o.findNodesKeys()
+    let keys2 = await n2o.findRelationsKeys()
 
     // TODO: 这里厉害了, map不能直接转成 object传递到 ctx.body中
-    const obj = [...keys.entries()].reduce((obj, [key, value]) => (obj[key] = value, obj), {})
+    const obj1 = [...keys1.entries()].reduce((obj1, [key, value]) => (obj1[key] = value, obj1), {})
+    const obj2 = [...keys2.entries()].reduce((obj2, [key, value]) => (obj2[key] = value, obj2), {})
     
-    ctx.body = obj
+    ctx.body = Object.assign(obj1, obj2)
   }
 }
 

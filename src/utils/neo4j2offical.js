@@ -915,7 +915,7 @@ class Neo4j2Offical {
     try {
       const result = await session.writeTransaction((tx) =>
         tx.run(
-          `match (a) return keys(a)`
+          `match (n) return DISTINCT keys(n)`
         )
       )
 
@@ -927,7 +927,7 @@ class Neo4j2Offical {
         const key = record.get(0)
         for (let k of key) {
           if (!keys.has(k)) {
-            const l = await this.findKeysValue(k)
+            const l = await this.findKeysValue(k, 1)
             keys.set(k, l)
           }
         }
@@ -939,15 +939,61 @@ class Neo4j2Offical {
     }
   }
 
-  async findKeysValue(key) {
+  async findRelationsKeys() {
     const session = this.driver.session()
 
     try {
       const result = await session.writeTransaction((tx) =>
         tx.run(
-          `MATCH (n) WHERE EXISTS(n.${key}) RETURN DISTINCT "node" as entity, n.${key} as ${key}`
+          `match () - [r] -> () return keys(r)`
         )
       )
+
+      console.log(result.summary.query.text)
+
+      const keys = new Map()
+
+      for (const record of result.records) {
+        const key = record.get(0)
+        for (let k of key) {
+          if (!keys.has(k)) {
+            const l = await this.findKeysValue(k, 2)
+            keys.set(k, l)
+          }
+        }
+      }
+
+      return keys
+    } finally {
+      await session.close()
+    }
+  }
+
+  /**
+   * 根据类型查找 key值. 1 --> node; 2 --> relation;
+   * @param String key 
+   * @param number type 
+   */
+  async findKeysValue(key, type) {
+    const session = this.driver.session()
+
+    try {
+      let result = ''
+      if (type === 1) {
+        result = await session.writeTransaction((tx) =>
+          tx.run(
+            `MATCH (n) WHERE EXISTS(n.${key}) RETURN DISTINCT "node" as entity, n.${key} as ${key}`
+          )
+        )
+      }
+      if (type === 2) {
+        result = await session.writeTransaction((tx) =>
+          tx.run(
+            `MATCH ()-[r]-() WHERE EXISTS(r.${key}) RETURN DISTINCT "relationship" AS entity, r.${key} AS ${key}`
+          )
+        )
+      }
+
 
       console.log(result.summary.query.text)
 
