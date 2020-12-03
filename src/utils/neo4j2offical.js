@@ -909,6 +909,9 @@ class Neo4j2Offical {
     }
   }
 
+  /**
+   * TODO: 查询节点的所有属性名字 (并且基准去重了)
+   */
   async findNodesKeys() {
     const session = this.driver.session()
 
@@ -939,6 +942,9 @@ class Neo4j2Offical {
     }
   }
 
+  /**
+   * TODO: 查询关系的所有属性名字 (并且基准去重了)
+   */
   async findRelationsKeys() {
     const session = this.driver.session()
 
