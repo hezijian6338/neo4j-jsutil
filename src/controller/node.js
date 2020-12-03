@@ -55,6 +55,14 @@ class Node {
     ctx.body = result
   }
 
+  async relateById(ctx) {
+    const { relateId, relatedId, relationName, relationValue, onlyProperties } = ctx.request.body
+
+    const result = await n2o.relateById(relateId, relatedId, relationName, relationValue, onlyProperties)
+
+    ctx.body = result
+  }
+
   async findNodeTypeList(ctx) {
     const { onlyProperties } = ctx.request.body
 
@@ -190,9 +198,9 @@ class Node {
   }
 
   async updateRelationById(ctx) {
-    const { relateId, relatedId, updateValue, onlyProperties } = ctx.request.body
+    const { relateId, relatedId, relationId, updateValue, onlyProperties } = ctx.request.body
 
-    const result = await n2o.updateRelationById(relateId, relatedId, updateValue, onlyProperties)
+    const result = await n2o.updateRelationById(relateId, relatedId, relationId, updateValue, onlyProperties)
 
     ctx.body = result
   }

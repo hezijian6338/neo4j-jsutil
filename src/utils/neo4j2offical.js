@@ -317,6 +317,60 @@ class Neo4j2Offical {
   }
 
   /**
+   * TODO: 根据 id关联两个节点 (提供关系内容)
+   * @param {*} relateId 
+   * @param {*} relatedId 
+   * @param {*} relationName 
+   * @param {*} relationValue 
+   * @param {*} onlyProperties 
+   */
+  async relateById(
+    relateId = '',
+    relatedId = '',
+    relationName = '',
+    relationValue = {},
+    onlyProperties = false
+  ) {
+    if (onlyProperties === undefined || onlyProperties === null) {
+      onlyProperties = false
+    }
+
+    const session = this.driver.session()
+
+    try {
+      const result = await session.writeTransaction((tx) =>
+        tx.run(
+          `match (a), (b) where ID(a)=${relateId} and ID(b)=${relatedId} merge (a)-[r:${relationName} ${Neo4j2Offical.parseJSON(
+            relationValue
+          )}]->(b) return a,r,b`
+        )
+      )
+
+      console.log(result.summary.query.text)
+
+      const singleRecord = result.records[0]
+      const node = {}
+      const nodeA = singleRecord.get(0)
+      const nodeR = singleRecord.get(1)
+      const nodeB = singleRecord.get(2)
+
+      if (onlyProperties) {
+        Reflect.set(node, 'node', nodeA.properties)
+        Reflect.set(node, 'relation', nodeR.properties)
+        Reflect.set(node, 'relatedNode', nodeB.properties)
+      } else {
+        Reflect.set(node, 'node', nodeA)
+        Reflect.set(node, 'relation', nodeR)
+        Reflect.set(node, 'relatedNode', nodeB)
+      }
+
+      return node
+    } finally {
+      await session.close()
+    }
+  }
+
+  /**
    *
    * @param String label
    * @param Object value
@@ -825,6 +879,7 @@ class Neo4j2Offical {
    * TODO: 根据 两个节点 ID更新定点关系属性
    * @param String relateId 主动关系节点 Id
    * @param String relatedId 被动关系节点 Id
+   * @param String relationId 关系 Id
    * @param Object updateValue 更新的属性内容
    * @param Boolean onlyProperties 
    */
